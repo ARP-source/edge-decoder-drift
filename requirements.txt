@@ -1,0 +1,10 @@
+# versions used for the CPU runs (Python 3.12, aarch64 sandbox)
+torch==2.15.0
+numpy==2.5.5
+scikit-learn==1.9.1
+scipy==1.18.1
+pandas==3.1.1
+pynwb==4.2.0
+falcon-challenge==1.0.2
+matplotlib==3.11.2
+requests==2.34.2

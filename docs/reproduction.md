@@ -2,7 +2,7 @@
 
 Validating the FALCON pipeline before building anything on top of it.
 
-## FALCON H1 (DANDI:000954) — sklearn baselines
+## FALCON H1 (DANDI:000954), sklearn baselines
 
 Environment: Python 3.10 venv on Jetson host (no GPU needed for these),
 `falcon-challenge` and `dandi` installed via pip.
@@ -39,5 +39,5 @@ The CV fit discrepancy (0.24 vs 0.26) is larger than the eval discrepancy
 (0.1943 vs 0.195) and is not yet explained. Likely candidates: scikit-learn
 version drift, or the DANDI dandiset having been revised since the README was
 written (it is served as a draft version with incomplete metadata). Not currently
-blocking — the evaluation number, which is the one the benchmark actually scores
+blocking, the evaluation number, which is the one the benchmark actually scores
 on, matches to three decimal places. Worth revisiting if it becomes relevant.
