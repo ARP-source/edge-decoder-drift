@@ -47,6 +47,12 @@ The evaluation number matches. The CV gap is small and I haven't tracked it down
 
 Reading notes are in [docs/literature.md](docs/literature.md).
 
+## Related work
+
+The closest recent paper I know of is FETTUCCINE ([McCart, Deevi et al., NeurIPS 2026](https://arxiv.org/abs/2611.18561)). They run an end-to-end speech brain-to-text decoder on a commercial phone, up to 370 times faster than real time, with word error rates as low as 4.39% on public intracortical speech data. They also show fine-tuning keeps it usable on later days.
+
+That covers part of my question for speech decoding on phone-class hardware. What I want to look at is different in three ways: motor decoding on the FALCON tasks, how much the drift gap changes as the model is compressed further, and energy measured from the power rails instead of throughput alone.
+
 ## License
 
 MIT
