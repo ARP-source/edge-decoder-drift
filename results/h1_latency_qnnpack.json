@@ -1,0 +1,9 @@
+{
+ "cpu": "aarch64",
+ "engine": "qnnpack",
+ "seed": 0,
+ "fp32_ms": 0.34344600044278195,
+ "int8_ptq_qnnpack_ms": 0.2478300002621836,
+ "int8_ptq_qnnpack_held_in": 0.8875141327197735,
+ "int8_ptq_qnnpack_held_out": 0.23026427187557733
+}

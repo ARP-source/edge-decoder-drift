@@ -11,6 +11,7 @@ hardware, and post-compression recalibration.
 | Karpowicz et al. 2024, *Reducing power requirements for high-accuracy decoding in iBCIs* (J. Neural Eng.) | No: within-day | Partial: circuit-model calculations (NEF, Schreier FoM) | No | No | Spikes + LFP |
 | Mei et al. 2024, *Train-on-Request* (BioCAS) | Yes | Yes: 1mJ/step on GAP9 | Yes | Yes | Scalp EEG |
 | McCart, Deevi et al. 2026, *FETTUCCINE: Fast and efficient brain-to-text decoding on mobile devices* (NeurIPS 2026, arXiv 2611.18561) | Yes: fine-tuning extends use to later days | Not checked yet | Yes: commercial phone, up to 370x real time | Yes: fine-tuning | Intracortical speech |
+| Karpowicz et al. 2025, *Stabilizing brain-computer interfaces through alignment of latent dynamics* (NoMAD, Nat. Commun. 16:4662, [doi:10.1038/s41467-025-59652-y](https://doi.org/10.1038/s41467-025-59652-y)) | Yes: weeks to months, monkey motor cortex | No | No: offline, full precision | No labels needed: unsupervised alignment of new data to fixed latent dynamics | Intracortical NHP |
 | Fang et al. 2025, *Lightweight neural decoder design using QAT* (IEEE NER) | **Unread** | **Unread** | Simulation study per abstract | **Unread** |: |
 
 ## Reading of the gap
@@ -24,6 +25,11 @@ Two patterns across the accessible papers:
    transmission; Zhou compares *architectures*; Mei does on-device learning
    *without* compression. None compress the *model* and then ask what drift does
    to it.
+
+NoMAD handles drift without any recalibration labels, by aligning each new day's
+neural data to a fixed model of latent dynamics. That is a different answer to the
+same problem than the few-shot labeled recalibration I test here, and it would be
+worth asking later whether that alignment step survives compression too.
 
 ## Open
 
