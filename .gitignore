@@ -4,3 +4,5 @@ falcon-env/
 local_data/
 __pycache__/
 *.pyc
+CLAUDE.md
+.claude/

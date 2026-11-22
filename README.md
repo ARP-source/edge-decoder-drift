@@ -1,63 +1,51 @@
-# Compression and Cross-Session Drift in Intracortical Decoders
+# Edge Decoder Drift
 
-Does compressing an iBCI decoder for on-body deployment make it more vulnerable
-to cross-session neural nonstationarity — and can a quantized decoder still be
-recalibrated on-device?
+If you compress a brain-computer interface decoder so it can run on a small chip, does it get worse at handling the way neural signals change from day to day? And can you still recalibrate it on that chip?
 
-## Motivation
+## Why I'm asking this
 
-Intracortical BCI decoders face two constraints simultaneously in deployment:
-they must run on-body under tight power budgets, and they must survive neural
-signal drift over days to weeks without constant recalibration.
+An implanted BCI decoder has to do two hard things at once. It has to run on very little power, because it lives on the body. And it has to keep working as the recorded neurons shift across days and weeks, without the user recalibrating constantly.
 
-These constraints are studied separately. Robustness work evaluates at full
-precision on workstation GPUs. Efficiency work evaluates within-session and
-typically estimates power analytically (MAC counts, circuit models) rather than
-measuring it. No deployed device operates in either regime — it operates in both
-at once.
+From what I've read, these get studied separately. Drift and robustness papers usually run full precision models on a workstation GPU. Efficiency papers usually test within a single session and estimate power from operation counts instead of measuring it. A real device deals with both at the same time, so I want to measure how they interact.
 
-This project measures the interaction.
+## Questions
 
-## Research questions
+1. Does the gap between same-day accuracy and later-session accuracy grow as the decoder is compressed more?
+2. After quantization, does few-shot recalibration still recover performance when the recalibration itself runs on the embedded device?
+3. What does the accuracy, latency and energy tradeoff actually look like on real embedded hardware?
 
-1. Does the held-in to held-out accuracy gap widen as a function of compression
-   level? (i.e. does compression amplify drift-induced degradation)
-2. Does few-shot recalibration still recover performance after quantization,
-   when the recalibration itself runs on the embedded device?
-3. What is the measured accuracy / latency / energy frontier for iBCI decoders
-   on embedded hardware?
+Either answer to question 1 is useful. If compression doesn't make drift worse, that's a case for compressing more aggressively.
 
-Both outcomes on (1) are informative: no interaction would characterize the
-Pareto frontier and license more aggressive edge deployment.
+## Setup
 
-## Approach
+- **Data:** the [FALCON benchmark](https://github.com/snel-repo/falcon-challenge) (Karpowicz et al., NeurIPS 2024 Datasets and Benchmarks). It has multi-session iBCI recordings with held-in and held-out sessions and small calibration sets for recalibration.
+- **Hardware:** NVIDIA Jetson Orin Nano Super (8 GB), JetPack 6.2.1, CUDA 12.6. Details in [docs/hardware.md](docs/hardware.md).
+- **Energy:** read from the board's INA3221 power rails, so energy per inference is measured, not estimated from FLOPs. These rails cover the module (SoC and memory), not the whole board.
+- **Compression levels:** FP32, FP16, INT8 post-training quantization, INT8 quantization-aware training, and structured pruning.
+- **Model size:** small enough to train and recalibrate on the device, since that's the setting that matters for deployment.
 
-- **Data:** [FALCON benchmark](https://github.com/snel-repo/falcon-challenge)
-  (Karpowicz et al., NeurIPS 2024 D&B) — multi-session iBCI datasets with
-  held-in/held-out splits and few-shot recalibration data
-- **Hardware:** NVIDIA Jetson Orin Nano Super (8GB), JetPack 6.2.1, L4T 36.4.7,
-  CUDA 12.6
-- **Energy measurement:** onboard INA3221 rails via sysfs — measured joules per
-  inference, not FLOP proxies
-- **Compression:** FP32 → FP16 → INT8 PTQ → INT8 QAT, plus structured pruning
-- **Scope constraint:** decoders small enough to train and recalibrate on-device,
-  which is the deployment-relevant regime anyway
+## Progress
 
-## Status
+Early stage. I've set up the hardware and reproduced the published baseline. No new results yet.
 
-**Setup and validation phase.** No novel results yet.
+Reproduced FALCON H1 sklearn baseline ([docs/reproduction.md](docs/reproduction.md)):
 
-- [x] Hardware environment verified (see `docs/hardware.md`)
-- [x] FALCON H1 baselines reproduced (see `docs/reproduction.md`)
-- [ ] Torch decoder baseline reproduced
-- [ ] M1/M2 (multi-session monkey) datasets
+| Metric | FALCON reported | My run |
+|---|---|---|
+| Held-in R² (minival) | 0.195 | 0.1943 |
+| CV fit score | 0.26 | 0.24 |
+
+The evaluation number matches. The CV gap is small and I haven't tracked it down yet; my best guesses are a scikit-learn version difference or a revised dataset on DANDI.
+
+- [x] Jetson environment set up and recorded
+- [x] FALCON H1 baseline reproduced
+- [ ] PyTorch decoder baseline
+- [ ] M1 and M2 datasets
 - [ ] Quantization sweep
 - [ ] Power measurement harness
 - [ ] On-device recalibration experiments
 
-## Related work
-
-See `docs/literature.md` — survey in progress.
+Reading notes are in [docs/literature.md](docs/literature.md).
 
 ## License
 
